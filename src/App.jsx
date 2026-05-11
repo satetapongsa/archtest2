@@ -58,23 +58,47 @@ const ChevronDownIcon = ({ size = 24, className = "" }) => (
   </svg>
 )
 
-const RainbowGauge = ({ speed, maxSpeed = 200 }) => {
+const RainbowGauge = ({ speed, maxSpeed = 1000 }) => {
   const percent = Math.min(speed / maxSpeed, 1)
   const radius = 80
-  const circumference = Math.PI * radius // Half circle circumference
+  const circumference = Math.PI * radius
   const offset = circumference - (percent * circumference)
 
+  // Ticks mapping: value to angle (180 to 0)
+  const ticks = [0, 5, 10, 50, 100, 250, 500, 750, 1000]
+  
   return (
-    <div className="relative w-full max-w-lg aspect-[2/1] flex items-center justify-center overflow-hidden">
+    <div className="relative w-full max-w-xl aspect-[2/1] flex items-center justify-center overflow-hidden">
       <svg className="w-full h-full" viewBox="0 0 200 110">
         {/* Background Arc */}
         <path
           d="M20 90 A80 80 0 0 1 180 90"
           fill="none"
-          stroke="#1a1a1a"
+          stroke="#121212"
           strokeWidth="12"
           strokeLinecap="round"
         />
+        {/* Ticks and Labels */}
+        <g className="opacity-40">
+          {ticks.map((tick, i) => {
+            const angle = 180 - (i * (180 / (ticks.length - 1)))
+            const rad = (angle * Math.PI) / 180
+            const x = 100 + Math.cos(rad) * 65
+            const y = 90 - Math.sin(rad) * 65
+            return (
+              <text
+                key={tick}
+                x={x}
+                y={y}
+                textAnchor="middle"
+                className="fill-gray-400 text-[5px] font-bold"
+              >
+                {tick}
+              </text>
+            )
+          })}
+        </g>
+
         {/* Rainbow Progress Arc */}
         <motion.path
           d="M20 90 A80 80 0 0 1 180 90"
@@ -101,10 +125,10 @@ const RainbowGauge = ({ speed, maxSpeed = 200 }) => {
       </svg>
       
       <div className="absolute bottom-0 inset-x-0 flex flex-col items-center justify-center pb-4">
-        <span className="text-7xl font-black rainbow-text">
+        <span className="text-6xl font-black rainbow-text tracking-tighter">
           {speed.toFixed(1)}
         </span>
-        <span className="text-gray-500 uppercase tracking-widest text-sm font-medium">Mbps</span>
+        <span className="text-gray-500 uppercase tracking-widest text-xs font-bold opacity-60">Mbps</span>
       </div>
     </div>
   )
@@ -254,13 +278,13 @@ export default function App() {
                 {state !== 'TESTING' ? (
                   <motion.button
                     key="btn"
-                    whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(143, 0, 255, 0.4)" }}
+                    whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168, 85, 247, 0.4)" }}
                     whileTap={{ scale: 0.95 }}
                     onClick={startTest}
-                    className="px-12 py-4 rounded-full rainbow-border group relative overflow-hidden"
+                    className="px-12 py-4 rounded-full bg-purple-600/10 border border-purple-500/30 group relative overflow-hidden transition-all duration-300"
                   >
-                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <span className="relative text-2xl font-black tracking-tighter">
+                    <div className="absolute inset-0 bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="relative text-2xl font-black tracking-tighter text-white group-hover:text-purple-300 transition-colors">
                       {state === 'IDLE' ? 'START TEST' : 'RETRY'}
                     </span>
                   </motion.button>
