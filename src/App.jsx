@@ -58,6 +58,76 @@ const ChevronDownIcon = ({ size = 24, className = "" }) => (
   </svg>
 )
 
+const ShieldIcon = ({ size = 24, className = "" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+  </svg>
+)
+
+const SecurityMonitor = ({ isScanning }) => {
+  const [ports, setPorts] = useState([
+    { port: 80, name: 'HTTP', status: 'SECURE' },
+    { port: 443, name: 'HTTPS', status: 'SECURE' },
+    { port: 21, name: 'FTP', status: 'SECURE' },
+    { port: 22, name: 'SSH', status: 'SECURE' },
+    { port: 3306, name: 'MySQL', status: 'SECURE' },
+    { port: 8080, name: 'Proxy', status: 'SECURE' },
+  ])
+
+  useEffect(() => {
+    if (isScanning) {
+      const scan = async () => {
+        setPorts(prev => prev.map(p => ({ ...p, status: 'Scanning...' })))
+        for (let i = 0; i < ports.length; i++) {
+          await new Promise(r => setTimeout(r, 600 + Math.random() * 800))
+          setPorts(prev => {
+            const next = [...prev]
+            next[i].status = Math.random() > 0.98 ? 'OPEN' : 'SECURE'
+            return next
+          })
+        }
+      }
+      scan()
+    }
+  }, [isScanning])
+
+  return (
+    <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-6 space-y-4 hover:border-purple-500/30 transition-all shadow-2xl">
+      <div className="flex items-center justify-between border-b border-white/5 pb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
+          <h3 className="font-bold text-xs tracking-widest text-gray-400 uppercase">Security Audit</h3>
+        </div>
+        <ShieldIcon size={16} className="text-purple-400" />
+      </div>
+      
+      <div className="grid grid-cols-2 gap-3">
+        {ports.map((p) => (
+          <div key={p.port} className="flex flex-col gap-1 p-3 bg-black/40 rounded-2xl border border-white/5 group hover:border-purple-500/20 transition-colors">
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] font-bold text-gray-500 group-hover:text-gray-400 transition-colors">{p.name}</span>
+              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-full ${
+                p.status === 'OPEN' ? 'bg-red-500/20 text-red-500' : 
+                p.status === 'SECURE' ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-400 animate-pulse'
+              }`}>
+                {p.status}
+              </span>
+            </div>
+            <span className="text-xs font-mono font-bold text-white/90">Port {p.port}</span>
+          </div>
+        ))}
+      </div>
+      
+      <div className="pt-2">
+        <div className="flex items-center gap-2 text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em] opacity-60">
+          <ActivityIcon size={10} className="text-purple-500" />
+          Network Firewall Active
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const RainbowGauge = ({ speed, maxSpeed = 1000 }) => {
   const percent = Math.min(speed / maxSpeed, 1)
   const radius = 80
@@ -288,6 +358,7 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
           {/* Left Side Metrics */}
           <div className="space-y-4">
+            <SecurityMonitor isScanning={state === 'TESTING'} />
             <ResultCard label="Ping" value={ping} unit="ms" icon={ZapIcon} active={activePhase === 'ping'} />
             <ResultCard label="Jitter" value={jitter} unit="ms" icon={ActivityIcon} active={activePhase === 'ping'} />
           </div>
