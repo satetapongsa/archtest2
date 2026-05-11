@@ -196,20 +196,28 @@ export default function App() {
   const [upload, setUpload] = useState(0)
   const [history, setHistory] = useState({ dl: [], ul: [] })
   const [activePhase, setActivePhase] = useState(null)
-  const [clientInfo, setClientInfo] = useState({ isp: 'Detecting...', ip: '...' })
+  const [clientInfo, setClientInfo] = useState({ isp: 'Detecting...', ipv4: '...', ipv6: '...' })
 
   useEffect(() => {
+    // Fetch ISP and general IP
     fetch('https://ipapi.co/json/')
       .then(res => res.json())
       .then(data => {
-        setClientInfo({
+        setClientInfo(prev => ({
+          ...prev,
           isp: data.org || 'Unknown ISP',
-          ip: data.ip || 'Unknown IP'
-        })
+          ipv6: data.version === 'IPv6' ? data.ip : '...',
+          ipv4: data.version === 'IPv4' ? data.ip : prev.ipv4
+        }))
       })
-      .catch(() => {
-        setClientInfo({ isp: 'True Online', ip: '27.145.121.93' }) // Fallback
+
+    // Specifically try to get IPv4 if not already found
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => {
+        setClientInfo(prev => ({ ...prev, ipv4: data.ip }))
       })
+      .catch(() => {})
   }, [])
 
   const startTest = async () => {
@@ -332,11 +340,24 @@ export default function App() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-4 pt-12 border-t border-white/5">
-          <div className="flex items-center gap-3 text-gray-400 bg-white/5 px-6 py-3 rounded-full border border-white/10">
-            <LaptopIcon size={18} className="text-purple-400" />
-            <span className="font-bold tracking-tight">{clientInfo.isp}</span>
-            <div className="w-1 h-1 bg-gray-600 rounded-full" />
-            <span className="font-mono text-sm opacity-70">{clientInfo.ip}</span>
+          <div className="flex flex-col md:flex-row items-center gap-3 text-gray-400 bg-white/5 px-8 py-4 rounded-3xl border border-white/10 transition-all hover:border-purple-500/50">
+            <div className="flex items-center gap-2">
+              <LaptopIcon size={18} className="text-purple-400" />
+              <span className="font-bold tracking-tight text-white">{clientInfo.isp}</span>
+            </div>
+            <div className="hidden md:block w-1 h-1 bg-gray-600 rounded-full" />
+            <div className="flex flex-col md:flex-row items-center gap-4 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <span className="text-gray-600 font-bold uppercase text-[9px]">IPv4:</span>
+                <span className="opacity-70">{clientInfo.ipv4}</span>
+              </div>
+              {clientInfo.ipv6 !== '...' && (
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-600 font-bold uppercase text-[9px]">IPv6:</span>
+                  <span className="opacity-70 text-[10px]">{clientInfo.ipv6}</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

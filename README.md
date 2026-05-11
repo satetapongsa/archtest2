@@ -2,7 +2,7 @@
 
 A high-performance, vibrant, and unique internet speed test application built with **React**, **Tailwind CSS v4**, and **Framer Motion**.
 
-![Speed Test Preview](https://raw.githubusercontent.com/satetapongsa/archtest2/main/preview.png)
+![Rainbow Speed Test Banner](banner.png)
 
 ## ✨ Features
 
