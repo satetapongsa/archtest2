@@ -101,14 +101,9 @@ const RainbowGauge = ({ speed, maxSpeed = 200 }) => {
       </svg>
       
       <div className="absolute bottom-0 inset-x-0 flex flex-col items-center justify-center pb-4">
-        <motion.span 
-          key={speed}
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-7xl font-black rainbow-text"
-        >
+        <span className="text-7xl font-black rainbow-text">
           {speed.toFixed(1)}
-        </motion.span>
+        </span>
         <span className="text-gray-500 uppercase tracking-widest text-sm font-medium">Mbps</span>
       </div>
     </div>
