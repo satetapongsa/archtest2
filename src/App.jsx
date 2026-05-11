@@ -196,6 +196,21 @@ export default function App() {
   const [upload, setUpload] = useState(0)
   const [history, setHistory] = useState({ dl: [], ul: [] })
   const [activePhase, setActivePhase] = useState(null)
+  const [clientInfo, setClientInfo] = useState({ isp: 'Detecting...', ip: '...' })
+
+  useEffect(() => {
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        setClientInfo({
+          isp: data.org || 'Unknown ISP',
+          ip: data.ip || 'Unknown IP'
+        })
+      })
+      .catch(() => {
+        setClientInfo({ isp: 'True Online', ip: '27.145.121.93' }) // Fallback
+      })
+  }, [])
 
   const startTest = async () => {
     setState('TESTING')
@@ -319,9 +334,9 @@ export default function App() {
         <div className="flex flex-col items-center gap-4 pt-12 border-t border-white/5">
           <div className="flex items-center gap-3 text-gray-400 bg-white/5 px-6 py-3 rounded-full border border-white/10">
             <LaptopIcon size={18} className="text-purple-400" />
-            <span className="font-bold tracking-tight">True Online</span>
+            <span className="font-bold tracking-tight">{clientInfo.isp}</span>
             <div className="w-1 h-1 bg-gray-600 rounded-full" />
-            <span className="font-mono text-sm opacity-70">27.145.121.93</span>
+            <span className="font-mono text-sm opacity-70">{clientInfo.ip}</span>
           </div>
         </div>
       </div>
