@@ -355,19 +355,17 @@ export default function App() {
           <div className="h-1 w-24 rainbow-gradient rounded-full animate-rainbow" />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-          {/* Left Side Metrics */}
-          <div className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          {/* Left Side: Security Audit (Expanded) */}
+          <div className="lg:col-span-1 h-full">
             <SecurityMonitor isScanning={state === 'TESTING'} />
-            <ResultCard label="Ping" value={ping} unit="ms" icon={ZapIcon} active={activePhase === 'ping'} />
-            <ResultCard label="Jitter" value={jitter} unit="ms" icon={ActivityIcon} active={activePhase === 'ping'} />
           </div>
 
-          {/* Center Gauge */}
-          <div className="flex flex-col items-center justify-center scale-110">
+          {/* Center: Gauge */}
+          <div className="flex flex-col items-center justify-center pt-10">
             <RainbowGauge speed={activePhase === 'download' ? download : (activePhase === 'upload' ? upload : (state === 'FINISHED' ? download : 0))} />
             
-            <div className="mt-4">
+            <div className="mt-8">
               <AnimatePresence mode="wait">
                 {state !== 'TESTING' ? (
                   <motion.button
@@ -375,10 +373,10 @@ export default function App() {
                     whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168, 85, 247, 0.4)" }}
                     whileTap={{ scale: 0.95 }}
                     onClick={startTest}
-                    className="px-12 py-4 rounded-full bg-purple-600/10 border border-purple-500/30 group relative overflow-hidden transition-all duration-300"
+                    className="px-16 py-5 rounded-full bg-purple-600/10 border border-purple-500/30 group relative overflow-hidden transition-all duration-300 shadow-2xl"
                   >
                     <div className="absolute inset-0 bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <span className="relative text-2xl font-black tracking-tighter text-white group-hover:text-purple-300 transition-colors">
+                    <span className="relative text-3xl font-black tracking-tighter text-white group-hover:text-purple-300 transition-colors">
                       {state === 'IDLE' ? 'START TEST' : 'RETRY'}
                     </span>
                   </motion.button>
@@ -391,7 +389,7 @@ export default function App() {
                     >
                       MEASURING {activePhase?.toUpperCase()}...
                     </motion.div>
-                    <div className="w-48 h-1 bg-white/10 rounded-full overflow-hidden">
+                    <div className="w-64 h-1 bg-white/10 rounded-full overflow-hidden">
                       <motion.div 
                         className="h-full rainbow-gradient"
                         animate={{ x: ['-100%', '100%'] }}
@@ -404,10 +402,14 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right Side Metrics */}
+          {/* Right Side: Results */}
           <div className="space-y-4">
             <ResultCard label="Download" value={download || '--'} unit="Mbps" icon={DownloadIcon} active={activePhase === 'download'} graphData={history.dl} />
             <ResultCard label="Upload" value={upload || '--'} unit="Mbps" icon={UploadIcon} active={activePhase === 'upload'} graphData={history.ul} />
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
+              <ResultCard label="Ping" value={ping} unit="ms" icon={ZapIcon} active={activePhase === 'ping'} />
+              <ResultCard label="Jitter" value={jitter} unit="ms" icon={ActivityIcon} active={activePhase === 'ping'} />
+            </div>
           </div>
         </div>
         <div className="flex flex-col items-center gap-4 pt-12 border-t border-white/5">
