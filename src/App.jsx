@@ -292,56 +292,14 @@ export default function App() {
             <ResultCard label="Upload" value={upload || '--'} unit="Mbps" icon={UploadIcon} active={activePhase === 'upload'} graphData={history.ul} />
           </div>
         </div>
-
-        <div className="flex flex-col items-center gap-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
-            <div className="flex items-center gap-6 bg-white/5 backdrop-blur-xl px-6 py-4 rounded-2xl border border-white/10 justify-between group hover:border-purple-500/50 transition-all">
-              <div className="flex items-center gap-4 cursor-pointer">
-                <div className="p-2 bg-purple-500/20 rounded-lg text-purple-400">
-                  <GlobeIcon size={20} />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-sm">SCM Technologies</span>
-                  <span className="text-gray-500 text-[10px] uppercase font-bold tracking-wider">Nonthaburi, Thailand</span>
-                </div>
-              </div>
-              <ChevronDownIcon size={16} className="text-gray-600 group-hover:text-purple-400" />
-            </div>
-
-            <div className="flex items-center gap-4 bg-purple-500/10 backdrop-blur-xl px-6 py-4 rounded-2xl border border-purple-500/20 text-purple-400 text-sm font-bold cursor-pointer hover:bg-purple-500/20 transition-all justify-center">
-              <MonitorIcon size={20} />
-              GET DESKTOP APP
-            </div>
-          </div>
-
-          <div className="flex items-center gap-6 text-gray-500">
-            <button className="flex items-center gap-2 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">
-              <LinkIcon size={14} /> Copy Results
-            </button>
-            <div className="w-px h-4 bg-white/10" />
-            <div className="flex gap-4">
-              <button className="hover:text-[#1DA1F2] transition-colors"><TwitterIcon size={18} /></button>
-              <button className="hover:text-[#4267B2] transition-colors"><FacebookIcon size={18} /></button>
-            </div>
+        <div className="flex flex-col items-center gap-4 pt-12 border-t border-white/5">
+          <div className="flex items-center gap-3 text-gray-400 bg-white/5 px-6 py-3 rounded-full border border-white/10">
+            <LaptopIcon size={18} className="text-purple-400" />
+            <span className="font-bold tracking-tight">True Online</span>
+            <div className="w-1 h-1 bg-gray-600 rounded-full" />
+            <span className="font-mono text-sm opacity-70">27.145.121.93</span>
           </div>
         </div>
-
-        <footer className="pt-8 border-t border-white/5 flex justify-between items-center text-sm">
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col">
-              <span className="font-bold">True Online</span>
-              <span className="text-gray-500 text-xs">27.145.121.93</span>
-            </div>
-            <LaptopIcon size={20} className="text-gray-600" />
-          </div>
-          <div className="flex items-center gap-4 text-right">
-            <div className="flex flex-col">
-              <span className="font-bold">SCM Technologies</span>
-              <span className="text-gray-500 text-xs">Nonthaburi</span>
-            </div>
-            <GlobeIcon size={20} className="text-gray-600" />
-          </div>
-        </footer>
       </div>
     </div>
   )
